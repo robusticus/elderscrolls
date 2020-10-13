@@ -23,7 +23,7 @@ class InfiniteScrollCards extends React.Component {
     }
 
     componentDidMount() {
-        this.FetchData(1);
+        this.FetchData();
         this.observer.observe(this.fetchStatusRef.current)
     }
 
@@ -31,7 +31,7 @@ class InfiniteScrollCards extends React.Component {
     componentDidUpdate(prevProps) {
         if (prevProps.filterObject !== this.props.filterObject) {
             //console.log("Filter: " + this.props.filterObject);
-            this.setState({pageNum: 1, cardData: [], isLoading: true}, this.FetchData(1));
+            this.setState({pageNum: 1, cardData: [], isLoading: true}, () => this.FetchData());
         }
     }
 
@@ -44,7 +44,7 @@ class InfiniteScrollCards extends React.Component {
             if (!this.state.isLoading && cardDataLen % pageSize === 0) {
                 if (this.state.error === null) {
                     const pageNum = this.state.pageNum + 1;
-                    this.setState({pageNum: pageNum, isLoading: true}, this.FetchData(pageNum))
+                    this.setState({pageNum: pageNum, isLoading: true}, () => this.FetchData())
                 }
             }
         }
@@ -52,7 +52,8 @@ class InfiniteScrollCards extends React.Component {
 
     // Retrieves JSON from API
     // TODO: Use ReactQuery for fetching
-    FetchData(pageNum) {
+    FetchData() {
+        const pageNum = this.state.pageNum;
         const resultsURL = "https://api.elderscrollslegends.io/v1/cards" +
             "?pageSize=" + pageSize +
             "&page=" + pageNum +

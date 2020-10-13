@@ -28,7 +28,7 @@ class SearchInput extends React.Component {
             this.onSubmit();
         }
         if (e.keyCode === 27) {
-            this.setState({filterObject: ""}, this.onSubmit());
+            this.setState({filterObject: ""}, () => this.onSubmit());
         }
     }
 
