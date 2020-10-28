@@ -19,12 +19,23 @@ class InfiniteScrollCards extends React.Component {
         // DOM reference to pass to intersectional observer
         this.fetchStatusRef = React.createRef();
 
-        this.observer = new IntersectionObserver(this.IntersectionEvent.bind(this));
+        // to support automated testing, if this fails we can still test fetch and render, just not infinite scrolling
+        // TODO: Investigate a mock function for this instead of the catch
+        try {
+            this.observer = new IntersectionObserver(this.IntersectionEvent.bind(this));
+        }
+        catch (e) {
+            if (e.message.indexOf("IntersectionObserver is not defined") === -1) {
+                throw e;
+            }
+        }
     }
 
     componentDidMount() {
         this.FetchData();
-        this.observer.observe(this.fetchStatusRef.current)
+        if (this.observer) {
+            this.observer.observe(this.fetchStatusRef.current)
+        }
     }
 
     // If the filter changed
